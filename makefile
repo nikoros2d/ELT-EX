@@ -1,4 +1,4 @@
-all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n6 bin/n8
+all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n6 bin/n8 bin/n12
 
 bin/n1: src/main/n1.c
 	gcc src/main/n1.c -o bin/n1
@@ -20,4 +20,7 @@ obj/libcalcfunc.a: src/lib/add.o src/lib/sub.o src/lib/mul.o src/lib/div.o
 
 bin/n8: src/main/n8.c obj/libcalcfunc.a 
 	gcc -o bin/n8 src/main/n8.c -L -l obj/libcalcfunc.a
+
+bin/n12: src/main/n12.c
+	gcc src/main/n12.c -o bin/n12
 
