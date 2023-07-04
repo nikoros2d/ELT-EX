@@ -4,8 +4,10 @@ int
 main ()
 {
   FILE *fptr;
-  fptr = fopen ("test.txt", "r");
   char content[1000];
+  gets (content, 1000, stdin);
+  fflush (stdin);
+  fptr = fopen (content, "r");
   if (fptr != NULL)
     {
       printf ("WE HAVE A WINNER!!!\n");
@@ -14,6 +16,6 @@ main ()
     }
   else
     {
-      printf ("FUCK YOU LOSER!!!\n");
+      printf ("ERROR FILE WASNT OPEN!!!%s m\n", content);
     }
 }
