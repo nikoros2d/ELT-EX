@@ -2,10 +2,10 @@
 #include <dirent.h>    //scandir
 #include <signal.h>    //ncurses
 #include <stdlib.h>    //ncurses
+#include <string.h>    //maybe later will resolve warnings
 #include <sys/ioctl.h> //signal
 #include <sys/stat.h>  //stat
-#include <termios.h>   //signal //honestly i have no idea why this suddenly started bombarding with warnings, still works just fine
-#include <string.h>    //maybe later will resolve warnings
+#include <termios.h> //signal //honestly i have no idea why this suddenly started bombarding with warnings, still works just fine
 #define MAXBUF 2000
 
 WINDOW *wnd;
@@ -34,10 +34,11 @@ moving ()
   keypad (wnd1, TRUE);
   char buffer[MAXBUF];
   char pathbuf[MAXBUF];
-  getcwd(pathbuf,MAXBUF);
+  getcwd (pathbuf, MAXBUF);
   char pathbuf1[MAXBUF];
-  getcwd(pathbuf1,MAXBUF);
-  int i=0,j;int g=0;
+  getcwd (pathbuf1, MAXBUF);
+  int i = 0, j;
+  int g = 0;
   struct stat x;
   // stat(".",&x);
   // printf("%d\n",x.st_mode);
@@ -63,7 +64,7 @@ moving ()
         }
       // free(namelist);
     } //}
-  wmove(wnd1,0,0);
+  wmove (wnd1, 0, 0);
   while (1)
     {
 
@@ -87,58 +88,71 @@ moving ()
                 }
             } // down
           if (ch == KEY_RIGHT)
-          {
-            strcat(pathbuf,"/");
-            strcat(pathbuf,namelist[i+2]->d_name);
-            
-            stat (pathbuf, &x);
-            if (S_ISDIR (x.st_mode))
-              {
-                n = scandir (pathbuf, &namelist, 0, alphasort);
-                if (n < 0)
-                  perror ("scandir");
-                else
-                  {
-                  wclear (wnd1);
-                    for (j = 2; j < n; j++)
-                      {
-                        wprintw (wnd1, "%s\n", namelist[j]->d_name);
-                        wrefresh (wnd1);
-                      }
-                        wmove(wnd1,i,0);
-                  }
-              }
-            else {g=0;
-            while(pathbuf[g]!=NULL)g++;
- 	    while(pathbuf[g]!='/'){pathbuf[g]=NULL;g--;}
-            pathbuf[g]=NULL;
-            if (S_ISREG (x.st_mode))
-              {
-              
-                ;
-              }}
-          }
+            {
+              strcat (pathbuf, "/");
+              strcat (pathbuf, namelist[i + 2]->d_name);
+
+              stat (pathbuf, &x);
+              if (S_ISDIR (x.st_mode))
+                {
+                  n = scandir (pathbuf, &namelist, 0, alphasort);
+                  if (n < 0)
+                    perror ("scandir");
+                  else
+                    {
+                      wclear (wnd1);
+                      for (j = 2; j < n; j++)
+                        {
+                          wprintw (wnd1, "%s\n", namelist[j]->d_name);
+                          wrefresh (wnd1);
+                        }
+                      wmove (wnd1, i, 0);
+                    }
+                }
+              else
+                {
+                  g = 0;
+                  while (pathbuf[g] != NULL)
+                    g++;
+                  while (pathbuf[g] != '/')
+                    {
+                      pathbuf[g] = NULL;
+                      g--;
+                    }
+                  pathbuf[g] = NULL;
+                  if (S_ISREG (x.st_mode))
+                    {
+
+                      ;
+                    }
+                }
+            }
           // right in file
           if (ch == KEY_LEFT)
             {
-            g=0;
-            while(pathbuf[g]!=NULL)g++;
- 	    while(pathbuf[g]!='/'){pathbuf[g]=NULL;g--;}
-            pathbuf[g]=NULL;
-                n = scandir (pathbuf, &namelist, 0, alphasort);
-                if (n < 0)
-                  perror ("scandir");
-                else
-                  {
+              g = 0;
+              while (pathbuf[g] != NULL)
+                g++;
+              while (pathbuf[g] != '/')
+                {
+                  pathbuf[g] = NULL;
+                  g--;
+                }
+              pathbuf[g] = NULL;
+              n = scandir (pathbuf, &namelist, 0, alphasort);
+              if (n < 0)
+                perror ("scandir");
+              else
+                {
                   wclear (wnd1);
-                    for (j = 2; j < n; j++)
-                      {
-                        wprintw(wnd1,"%s\n", namelist[j]->d_name);
-                        wrefresh (wnd1);
-                      }
-                      wmove(wnd1,0,0);
-                  }
-          }
+                  for (j = 2; j < n; j++)
+                    {
+                      wprintw (wnd1, "%s\n", namelist[j]->d_name);
+                      wrefresh (wnd1);
+                    }
+                  wmove (wnd1, 0, 0);
+                }
+            }
           if (ch == 9)
             {
               wmove (subwnd1, i, 0);
@@ -170,58 +184,71 @@ moving ()
                 }
             } // down
           if (ch == KEY_RIGHT)
-          {
-            strcat(pathbuf1,"/");
-            strcat(pathbuf1,subnamelist[i+2]->d_name);
-            
-            stat (pathbuf1, &x);
-            if (S_ISDIR (x.st_mode))
-              {
-                n = scandir (pathbuf1, &subnamelist, 0, alphasort);
-                if (n < 0)
-                  perror ("scandir");
-                else
-                  {
-                  wclear (subwnd1);
-                    for (j = 2; j < n; j++)
-                      {
-                        wprintw (subwnd1, "%s\n", subnamelist[j]->d_name);
-                        wrefresh (subwnd1);
-                      }
-                        wmove(subwnd1,i,0);
-                  }
-              }
-            else {g=0;
-            while(pathbuf1[g]!=NULL)g++;
- 	    while(pathbuf1[g]!='/'){pathbuf1[g]=NULL;g--;}
-            pathbuf1[g]=NULL;
-            if (S_ISREG (x.st_mode))
-              {
-              
-                ;
-              }}
-          }
+            {
+              strcat (pathbuf1, "/");
+              strcat (pathbuf1, subnamelist[i + 2]->d_name);
+
+              stat (pathbuf1, &x);
+              if (S_ISDIR (x.st_mode))
+                {
+                  n = scandir (pathbuf1, &subnamelist, 0, alphasort);
+                  if (n < 0)
+                    perror ("scandir");
+                  else
+                    {
+                      wclear (subwnd1);
+                      for (j = 2; j < n; j++)
+                        {
+                          wprintw (subwnd1, "%s\n", subnamelist[j]->d_name);
+                          wrefresh (subwnd1);
+                        }
+                      wmove (subwnd1, i, 0);
+                    }
+                }
+              else
+                {
+                  g = 0;
+                  while (pathbuf1[g] != NULL)
+                    g++;
+                  while (pathbuf1[g] != '/')
+                    {
+                      pathbuf1[g] = NULL;
+                      g--;
+                    }
+                  pathbuf1[g] = NULL;
+                  if (S_ISREG (x.st_mode))
+                    {
+
+                      ;
+                    }
+                }
+            }
           // right in file
           if (ch == KEY_LEFT)
             {
-            g=0;
-            while(pathbuf1[g]!=NULL)g++;
- 	    while(pathbuf1[g]!='/'){pathbuf1[g]=NULL;g--;}
-            pathbuf1[g]=NULL;
-                n = scandir (pathbuf1, &subnamelist, 0, alphasort);
-                if (n < 0)
-                  perror ("scandir");
-                else
-                  {
+              g = 0;
+              while (pathbuf1[g] != NULL)
+                g++;
+              while (pathbuf1[g] != '/')
+                {
+                  pathbuf1[g] = NULL;
+                  g--;
+                }
+              pathbuf1[g] = NULL;
+              n = scandir (pathbuf1, &subnamelist, 0, alphasort);
+              if (n < 0)
+                perror ("scandir");
+              else
+                {
                   wclear (subwnd1);
-                    for (j = 2; j < n; j++)
-                      {
-                        wprintw(subwnd1,"%s\n", subnamelist[j]->d_name);
-                        wrefresh (subwnd1);
-                      }
-                      wmove(subwnd1,0,0);
-                  }
-          }
+                  for (j = 2; j < n; j++)
+                    {
+                      wprintw (subwnd1, "%s\n", subnamelist[j]->d_name);
+                      wrefresh (subwnd1);
+                    }
+                  wmove (subwnd1, 0, 0);
+                }
+            }
           if (ch == 9)
             {
               wmove (wnd1, i, 0);
