@@ -1,4 +1,4 @@
-all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n6 bin/n8 bin/n12 bin/n13 bin/n15 bin/n16 bin/n17_1 bin/n17_2_1 bin/n17_2_2 bin/n17_3 bin/n18_1_1 bin/n18_1_2 bin/n18_2_1 bin/n18_2_2 bin/n18_3_1 bin/n18_3_2
+all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n5 bin/n6 bin/n8 bin/n9 bin/n12 bin/n13 bin/n15 bin/n16 bin/n17_1 bin/n17_2_1 bin/n17_2_2 bin/n17_3 bin/n18_1_1 bin/n18_1_2 bin/n18_2_1 bin/n18_2_2 bin/n18_3_1 bin/n18_3_2
 
 bin/n1: src/main/n1.c
 	gcc src/main/n1.c -o bin/n1
@@ -12,14 +12,35 @@ bin/n3: src/main/n3.c
 bin/n4: src/main/n4.c
 	gcc src/main/n4.c -o bin/n4
 
+bin/n5: src/main/n5.c
+	gcc src/main/n5.c -o bin/n5 -g
+
 bin/n6: src/main/n6.c
-	gcc src/main/n6.c -o bin/n6
+	gcc src/main/n6.c -o bin/n6 -g
 
 obj/libcalcfunc.a: src/lib/add.o src/lib/sub.o src/lib/mul.o src/lib/div.o
 	ar rc obj/libcalcfunc.a src/lib/add.o src/lib/sub.o src/lib/mul.o src/lib/div.o
-
+	
 bin/n8: src/main/n8.c obj/libcalcfunc.a 
 	gcc -o bin/n8 src/main/n8.c -L -l obj/libcalcfunc.a
+
+obj/add.o: src/lib/add.c	
+	gcc -c -fPIC -o $@ $<
+	
+obj/sub.o: src/lib/sub.c	
+	gcc -c -fPIC -o $@ $<
+	
+obj/mul.o: src/lib/mul.c	
+	gcc -c -fPIC -o $@ $<
+	
+obj/div.o: src/lib/div.c
+	gcc -c -fPIC -o $@ $<
+
+obj/libmyname.iso: obj/add.o obj/sub.o obj/mul.o obj/div.o
+	gcc -shared obj/add.o obj/sub.o obj/mul.o obj/div.o -o obj/libmyname.iso
+	
+bin/n9: src/main/n9.c obj/libmyname.iso 
+	gcc -o bin/n9 src/main/n9.c -L -l obj/libmyname.iso
 
 bin/n12: src/main/n12.c
 	gcc src/main/n12.c -o bin/n12 -lncurses

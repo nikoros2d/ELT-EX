@@ -2,11 +2,6 @@ obj/*.o
 obj/*.a
 src/lib/*.o
 src/lib/*.a
-bin/n1
-bin/n2
-bin/n3
-bin/n4
-bin/n5
-bin/n6
-bin/n7
-bin/n8
+bin/*
+obj/*.iso
+
