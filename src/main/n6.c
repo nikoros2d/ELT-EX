@@ -15,15 +15,16 @@ struct sprav *kniga;
 void
 add ()
 {
-  kniga = (struct sprav *)realloc (kniga, sizeof (struct sprav) * i);
-  printf ("ENTER NAME (30 chars max) >");
+  kniga = (struct sprav *)realloc (kniga, sizeof (struct sprav) * (i + 1));
+  char c;
+  while ((c = getchar ()) != '\n' && c != EOF)
+    /* discard */;
+  printf ("ENTER NAME (30 chars max) :\n");
   fgets (kniga[i].name, MAX, stdin);
-  fflush (stdin);
-  printf ("ENTER SURNAME (30 chars max) >");
+  printf ("ENTER SURNAME (30 chars max) :\n");
   fgets (kniga[i].surname, MAX, stdin);
-  fflush (stdin);
-  printf ("ENTER PHONE NUMBER >"); // if user uses anything other than numbers
-                                   // programm is doomed
+  printf ("ENTER PHONE NUMBER:\n"); // if user uses anything other than numbers
+                                    // programm is doomed
   scanf ("%d", &kniga[i].number);
   printf ("\nadded to i=%d\n   %s   %s   %d\n\n", i, kniga[i].name,
           kniga[i].surname, kniga[i].number);
@@ -34,8 +35,8 @@ void
 del ()
 {
   int j;
-  printf ("ENTER NUMBER >"); // if user uses anything other than numbers
-                             // programm is doomed
+  printf ("ENTER NUMBER :\n"); // if user uses anything other than numbers
+                               // programm is doomed
   scanf ("%d", &j);
   for (j; j < i; j++)
     {
@@ -43,7 +44,7 @@ del ()
       strcpy (kniga[j].surname, kniga[j + 1].surname);
       kniga[j].number = kniga[j + 1].number;
     }
-  free (kniga[i].name);
+  // free (kniga[i]);
   i--;
 }
 
@@ -54,14 +55,13 @@ search ()
   printf ("CHOOSE SEARCH KEY\n1 - NUMBER\n2 - NAME\n3 - SURNAME\n4 - "
           "NUMBER\n5 - EXIT\n");
   scanf ("%d", &x);
-  fflush (stdin);
   char key[MAX];
   switch (x)
     {
     case 1:
       {
-        printf ("ENTER NUMBER >"); // if user uses anything other than numbers
-                                   // programm is doomed
+        printf ("ENTER NUMBER:\n"); // if user uses anything other than numbers
+                                    // programm is doomed
         scanf ("%d", &j);
         printf ("\n%2d %30s%33s%32d", j, kniga[j].name, kniga[j].surname,
                 kniga[j].number);
@@ -70,10 +70,12 @@ search ()
       }
     case 2:
       {
-        printf ("ENTER NAME (30 chars max) >");
+        char c;
+        while ((c = getchar ()) != '\n' && c != EOF)
+          /* discard */;
+        printf ("ENTER NAME (30 chars max) :\n");
         fgets (key, MAX, stdin);
-        fflush (stdin);
-        for (j = 0; j < i; j++)
+        for (j = 1; j < i; j++)
           {
             if (!strcmp (key, kniga[j].name))
               {
@@ -89,10 +91,12 @@ search ()
       }
     case 3:
       {
-        printf ("ENTER SURNAME (30 chars max) >");
+        char c;
+        while ((c = getchar ()) != '\n' && c != EOF)
+          /* discard */;
+        printf ("ENTER SURNAME (30 chars max):\n");
         fgets (key, MAX, stdin);
-        fflush (stdin);
-        for (j = 0; j < i; j++)
+        for (j = 1; j < i; j++)
           {
             if (!strcmp (key, kniga[j].surname))
               {
@@ -108,15 +112,14 @@ search ()
       }
     case 4:
       {
-        printf ("ENTER PHONE NUMBER >"); // if user uses anything other than
-                                         // numbers programm is doomed
+        printf ("ENTER PHONE NUMBER :\n"); // if user uses anything other than
+                                           // numbers programm is doomed
         scanf ("%d", &x);
-        fflush (stdin);
-        for (j = 0; j < i; j++)
+        for (j = 1; j < i; j++)
           {
             if (kniga[j].number == x)
               {
-                printf ("\n%2d %30s%33s%32d", j, kniga[j].name,
+                printf ("\n%2d %30s%33s%32d\n", j, kniga[j].name,
                         kniga[j].surname, kniga[j].number);
                 printf ("\n            FOUND\n\n");
                 fl = 0;
@@ -136,24 +139,23 @@ search ()
 void
 print1 ()
 {
-  printf ("PRINTING WHOLE BOOK");
-  for (int j = 0; j < i; j++)
-    printf ("\n%2d %30s%33s%32d", j, kniga[j].name, kniga[j].surname,
+  printf ("PRINTING WHOLE BOOK:\n");
+  for (int j = 1; j < i; j++)
+    printf ("\n%2d %30s%33s%32d\n", j, kniga[j].name, kniga[j].surname,
             kniga[j].number);
-  printf ("\n            END\n\n");
+  printf ("            END\n\n");
 }
 
 int
 main ()
 {
-  kniga = (struct sprav *)malloc (sizeof (struct sprav));
+  kniga = (struct sprav *)malloc (sizeof (struct sprav) * 2);
   int x, i = 0;
   while (1)
     {
       printf ("1 - ADD\n2 - DELETE\n3 - SEARCH\n4 - PRINT\nELSE = "
-              "EXIT\n\nENTER OPTION >");
+              "EXIT\n\nENTER OPTION:\n");
       scanf ("%d", &x);
-      fflush (stdin);
       switch (x)
         {
         case 1:

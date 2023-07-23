@@ -10,7 +10,7 @@ main ()
   fflush (stdin);
   while (1)
     {
-      printf ("\n1 - ADD\n2 - SUB\n3 - MUL\n4 - DIV\nELSE = EXIT\n\nENTER "
+      printf ("\n1 - ADD\n2 - SUB\n3 - MUL\n4 - DIV\n5 = EXIT\n\nENTER "
               "OPTION >");
       scanf ("%d", &x);
       fflush (stdin);
@@ -39,7 +39,7 @@ main ()
           }
         default:
           {
-            printf ("resoult - %d", res);
+            printf ("resoult - %d\n", res);
             return 0;
           }
         }
