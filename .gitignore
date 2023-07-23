@@ -2,6 +2,6 @@ obj/*.o
 obj/*.a
 src/lib/*.o
 src/lib/*.a
-bin/*
+bin/n*
 obj/*.iso
 
