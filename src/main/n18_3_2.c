@@ -1,6 +1,6 @@
 #include <fcntl.h>
 #include <mqueue.h>
-#include <pthread.h> //this is server
+#include <pthread.h> //this is user
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +24,7 @@ void *
 thread_rcv (void *argv)
 {
   msgbuf mess;
-  mqd_t queue = mq_open ("/n18_2_1", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR,
+  mqd_t queue = mq_open ("/n18_3_1", O_RDONLY | O_CREAT, 0666,
                          &attributes);
   while (1)
     {
@@ -32,7 +32,7 @@ thread_rcv (void *argv)
       printf ("msg received: %s\n", mess.msg);
     }
   mq_close (queue);
-  mq_unlink ("/n18_2_1");
+  mq_unlink ("/n18_3_1");
 }
 
 void *
@@ -40,7 +40,7 @@ thread_snd (void *argv)
 {
   char buf1[MAXB];
   msgbuf mess;
-  mqd_t queue = mq_open ("/n18_2_2", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR,
+  mqd_t queue = mq_open ("/n18_3_2", O_WRONLY | O_CREAT, 0666,
                          &attributes);
   while (1)
     {
@@ -49,19 +49,28 @@ thread_snd (void *argv)
       mq_send (queue, (char *)&mess, sizeof (mess), 1);
     }
   mq_close (queue);
-  mq_unlink ("/n18_2_2");
+  mq_unlink ("/n18_3_2");
 }
 
 int
 main (int argc, char *argv[])
 {
   int *c[2];
-  printf ("server started!\n");
+  char buf1[MAXB];
+  printf ("user started!\n");
+  msgbuf mess;
+  mqd_t queue = mq_open ("/n18_3_3", O_WRONLY | O_CREAT, 0666,
+                         &attributes);
+  printf("ENTER YOUR NICKNAME:\n");
+          fgets (buf1, MAXB, stdin);
+      strcpy (mess.msg, buf1);
+      mq_send (queue, (char *)&mess, sizeof (mess), 1);
   pthread_t thread[2];
   pthread_create (&thread[0], NULL, thread_rcv, (void *)&c[0]);
   pthread_create (&thread[1], NULL, thread_snd, (void *)&c[1]);
   pthread_join (thread[1], (void **)&c);
   pthread_join (thread[0], (void **)&c);
-
+  mq_close (queue);
+  mq_unlink ("/n18_3_3");
   printf ("program finished!!!\n");
 }
