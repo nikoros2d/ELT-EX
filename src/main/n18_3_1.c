@@ -1,7 +1,7 @@
 #include <fcntl.h>
 #include <mqueue.h>
 #include <pthread.h> //this is server
-#include <stdio.h>   //this works, but havent figured out how to attach nicknames
+#include <stdio.h>   //this works
 #include <stdlib.h>  //cool thing actually
 #include <string.h>
 #include <sys/types.h>
