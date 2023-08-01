@@ -1,4 +1,4 @@
-all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n5 bin/n6 bin/n8 bin/n9 bin/n12 bin/n13 bin/n15 bin/n16 bin/n17_1 bin/n17_2_1 bin/n17_2_2 bin/n17_3 bin/n18_1_1 bin/n18_1_2 bin/n18_2_1 bin/n18_2_2 bin/n18_3_1 bin/n18_3_2 bin/n19_1_1 bin/n19_1_2 bin/n21_1_1 bin/n21_1_2 bin/n21_2_1 bin/n21_2_2 bin/n21_3_1 bin/n21_3_2 bin/n21_4_1 bin/n21_4_2 bin/n23
+all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n5 bin/n6 bin/n8 bin/n9 bin/n12 bin/n13 bin/n15 bin/n16 bin/n17_1 bin/n17_2_1 bin/n17_2_2 bin/n17_3 bin/n18_1_1 bin/n18_1_2 bin/n18_2_1 bin/n18_2_2 bin/n18_3_1 bin/n18_3_2 bin/n19_1_1 bin/n19_1_2 bin/n21_1_1 bin/n21_1_2 bin/n21_2_1 bin/n21_2_2 bin/n21_3_1 bin/n21_3_2 bin/n21_4_1 bin/n21_4_2 bin/n23 bin/n24
 
 bin/n1: src/main/n1.c
 	gcc src/main/n1.c -o bin/n1
@@ -116,3 +116,6 @@ bin/n21_4_2: src/main/n21_4_2.c
 	
 bin/n23: src/main/n23.c
 	gcc src/main/n23.c -o bin/n23
+	
+bin/n24: src/main/n24.c
+	gcc src/main/n24.c -o bin/n24

@@ -9,7 +9,7 @@
 #define MAXB 100
 
 char name[MAXB];
- 
+
 typedef struct
 {
   char msg[MAXB];
@@ -26,8 +26,7 @@ void *
 thread_rcv (void *argv)
 {
   msgbuf mess;
-  mqd_t queue = mq_open ("/n18_3_1", O_RDONLY | O_CREAT, 0666,
-                         &attributes);
+  mqd_t queue = mq_open ("/n18_3_1", O_RDONLY | O_CREAT, 0666, &attributes);
   while (1)
     {
       mq_receive (queue, (char *)&mess, sizeof (mess), NULL);
@@ -42,12 +41,11 @@ thread_snd (void *argv)
 {
   char buf1[MAXB];
   msgbuf mess;
-  mqd_t queue = mq_open ("/n18_3_2", O_WRONLY | O_CREAT, 0666,
-                         &attributes);
+  mqd_t queue = mq_open ("/n18_3_2", O_WRONLY | O_CREAT, 0666, &attributes);
   while (1)
-    { 
-      strcpy(mess.msg,name);
-      strcat(mess.msg,":");
+    {
+      strcpy (mess.msg, name);
+      strcat (mess.msg, ":");
       fgets (buf1, MAXB, stdin);
       strcat (mess.msg, buf1);
       mq_send (queue, (char *)&mess, sizeof (mess), 1);
@@ -63,13 +61,12 @@ main (int argc, char *argv[])
   int *c[2];
   printf ("user started!\n");
   msgbuf mess;
-  mqd_t queue = mq_open ("/n18_3_3", O_WRONLY | O_CREAT, 0666,
-                         &attributes);
-  printf("ENTER YOUR NICKNAME:\n");
-          fgets (buf1, MAXB, stdin);
-          strncpy(name,buf1,(strlen(buf1)-1));
-      strcpy (mess.msg, name);
-      mq_send (queue, (char *)&mess, sizeof (mess), 1);
+  mqd_t queue = mq_open ("/n18_3_3", O_WRONLY | O_CREAT, 0666, &attributes);
+  printf ("ENTER YOUR NICKNAME:\n");
+  fgets (buf1, MAXB, stdin);
+  strncpy (name, buf1, (strlen (buf1) - 1));
+  strcpy (mess.msg, name);
+  mq_send (queue, (char *)&mess, sizeof (mess), 1);
   pthread_t thread[2];
   pthread_create (&thread[0], NULL, thread_rcv, (void *)&c[0]);
   pthread_create (&thread[1], NULL, thread_snd, (void *)&c[1]);

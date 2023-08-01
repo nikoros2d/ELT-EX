@@ -9,7 +9,7 @@
 #define MAXB 100
 
 int n;
- 
+
 typedef struct
 {
   char msg[MAXB];
@@ -24,20 +24,19 @@ struct mq_attr attributes = {
 
 void *
 thread_rcv (void *argv)
-{ 
+{
   int j;
-  mqd_t queue2 = mq_open ("/n18_3_1", O_WRONLY | O_CREAT, 0666,
-                         &attributes);
+  mqd_t queue2 = mq_open ("/n18_3_1", O_WRONLY | O_CREAT, 0666, &attributes);
   msgbuf mess;
-  mqd_t queue = mq_open ("/n18_3_2", O_RDONLY | O_CREAT, 0666,
-                         &attributes);
+  mqd_t queue = mq_open ("/n18_3_2", O_RDONLY | O_CREAT, 0666, &attributes);
   while (1)
     {
       mq_receive (queue, (char *)&mess, sizeof (mess), NULL);
-      printf ("n=%d   msg received: %s\n",n, mess.msg);
-      for(j=0;j<n+1;j++){
-       mq_send (queue2, (char *)&mess, sizeof (mess), 1);
-      }
+      printf ("n=%d   msg received: %s\n", n, mess.msg);
+      for (j = 0; j < n + 1; j++)
+        {
+          mq_send (queue2, (char *)&mess, sizeof (mess), 1);
+        }
     }
   mq_close (queue);
   mq_unlink ("/n18_3_2");
@@ -47,22 +46,27 @@ thread_rcv (void *argv)
 
 void *
 thread_init (void *argv)
-{ 
-  int newusr=1,j;
-  n=0;
+{
+  int newusr = 1, j;
+  n = 0;
   char *users[MAXB];
   msgbuf mess;
-  mqd_t queue = mq_open ("/n18_3_3", O_RDONLY | O_CREAT, 0666,
-                         &attributes);
+  mqd_t queue = mq_open ("/n18_3_3", O_RDONLY | O_CREAT, 0666, &attributes);
   while (1)
-    { 
+    {
       mq_receive (queue, (char *)&mess, sizeof (mess), NULL);
       printf ("user %s logged in\n", mess.msg);
-      for(j=0;j<n;j++){
-       if(strcmp(mess.msg,users[j])==0)newusr=0;
-      }
-      if(newusr){users[n]=mess.msg;n++;}
-      newusr=1;
+      for (j = 0; j < n; j++)
+        {
+          if (strcmp (mess.msg, users[j]) == 0)
+            newusr = 0;
+        }
+      if (newusr)
+        {
+          users[n] = mess.msg;
+          n++;
+        }
+      newusr = 1;
     }
   mq_close (queue);
   mq_unlink ("/n18_3_3");
