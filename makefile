@@ -1,4 +1,4 @@
-all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n5 bin/n6 bin/n8 bin/n9 bin/n12 bin/n13 bin/n15 bin/n16 bin/n17_1 bin/n17_2_1 bin/n17_2_2 bin/n17_3 bin/n18_1_1 bin/n18_1_2 bin/n18_2_1 bin/n18_2_2 bin/n18_3_1 bin/n18_3_2 bin/n19_1_1 bin/n19_1_2 bin/n21_1_1 bin/n21_1_2 bin/n21_2_1 bin/n21_2_2 bin/n21_3_1 bin/n21_3_2 bin/n21_4_1 bin/n21_4_2 bin/n23 bin/n24 bin/n25
+all: bin/n1 bin/n2 bin/n3 bin/n4 bin/n5 bin/n6 bin/n8 bin/n9 bin/n10 bin/n12 bin/n13 bin/n15 bin/n16 bin/n17_1 bin/n17_2_1 bin/n17_2_2 bin/n17_3 bin/n18_1_1 bin/n18_1_2 bin/n18_2_1 bin/n18_2_2 bin/n18_3_1 bin/n18_3_2 bin/n19_1_1 bin/n19_1_2 bin/n20_1_1 bin/n20_1_2 bin/n20_2_1 bin/n20_2_2 bin/n21_1_1 bin/n21_1_2 bin/n21_2_1 bin/n21_2_2 bin/n21_3_1 bin/n21_3_2 bin/n21_4_1 bin/n21_4_2 bin/n23 bin/n24 bin/n25
 
 
 bin/n1: src/main/n1.c
@@ -42,6 +42,33 @@ obj/libmyname.iso: obj/add.o obj/sub.o obj/mul.o obj/div.o
 	
 bin/n9: src/main/n9.c obj/libmyname.iso 
 	gcc -o bin/n9 src/main/n9.c -L -l obj/libmyname.iso
+	
+obj/add1.o: src/lib/add1.c	
+	gcc -c -fPIC -o $@ $<
+	
+obj/sub1.o: src/lib/sub1.c	
+	gcc -c -fPIC -o $@ $<
+	
+obj/mul1.o: src/lib/mul1.c	
+	gcc -c -fPIC -o $@ $<
+	
+obj/div1.o: src/lib/div1.c
+	gcc -c -fPIC -o $@ $<
+	
+obj/libadd.so: obj/add1.o
+	gcc -shared obj/add1.o -o obj/libadd.so 
+
+obj/libsub.so: obj/sub1.o
+	gcc -shared obj/sub1.o -o obj/libsub.so
+
+obj/libmul.so: obj/mul1.o
+	gcc -shared obj/mul1.o -o obj/libmul.so
+
+obj/libdiv.so: obj/div1.o
+	gcc -shared obj/div1.o -o obj/libdiv.so
+	
+bin/n10: src/main/n10.c obj/libadd.so obj/libsub.so obj/libmul.so obj/libdiv.so
+	gcc src/main/n10.c -o bin/n10 obj/libadd.so obj/libsub.so obj/libmul.so obj/libdiv.so -rdynamic -ldl -g
 
 bin/n12: src/main/n12.c
 	gcc src/main/n12.c -o bin/n12 -lncurses
@@ -90,6 +117,18 @@ bin/n19_1_1: src/main/n19_1_1.c
 
 bin/n19_1_2: src/main/n19_1_2.c
 	gcc src/main/n19_1_2.c -o bin/n19_1_2
+	
+bin/n20_1_1: src/main/n20_1_1.c
+	gcc src/main/n20_1_1.c -o bin/n20_1_1 -lrt
+
+bin/n20_1_2: src/main/n20_1_2.c
+	gcc src/main/n20_1_2.c -o bin/n20_1_2 -lrt
+
+bin/n20_2_1: src/main/n20_2_1.c
+	gcc src/main/n20_2_1.c -o bin/n20_2_1 -lrt
+
+bin/n20_2_2: src/main/n20_2_2.c
+	gcc src/main/n20_2_2.c -o bin/n20_2_2 -lrt
 
 bin/n21_1_1: src/main/n21_1_1.c
 	gcc src/main/n21_1_1.c -o bin/n21_1_1

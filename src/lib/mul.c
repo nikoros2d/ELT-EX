@@ -1,5 +1,6 @@
 #include "calcfunc.h"
 #include "stdio.h"
+
 int
 mul (int res)
 {
