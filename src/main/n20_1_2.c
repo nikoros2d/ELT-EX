@@ -1,6 +1,6 @@
-//this is sender
-#include <signal.h>
+// this is sender
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,8 +9,10 @@
 #include <unistd.h>
 #define MAXB 100
 
-int main(int argc, char** argv) {
-	int fd;
+int
+main (int argc, char **argv)
+{
+  int fd;
   char *myfifo = "/tmp/myfifo";
   mkfifo (myfifo, 0666);
   char buf1[MAXB];
@@ -19,10 +21,10 @@ int main(int argc, char** argv) {
   fd = open (myfifo, O_RDONLY);
   read (fd, buf1, sizeof (buf1));
   close (fd);
-  pid_t* pid;
-	pid = buf1;
+  pid_t *pid;
+  pid = buf1;
 
-	kill(*pid, 9);
+  kill (*pid, 9);
 
-	exit(EXIT_SUCCESS);
+  exit (EXIT_SUCCESS);
 }

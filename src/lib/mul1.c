@@ -1,7 +1,9 @@
 #include "calcfunc1.h"
 #include "stdio.h"
-char* gname() {
-	return "mul";
+char *
+gname ()
+{
+  return "mul";
 }
 
 int

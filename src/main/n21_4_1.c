@@ -36,7 +36,8 @@ main (int argc, char *argv[])
     };
   listen (Fd, 1);
   // if((nfd=accept(Fd,(struct sockaddr *)&client, &addrlen)) ==
-  // -1){perror("accept");exit(EXIT_FAILURE);} else printf("accept granted!\n");
+  // -1){perror("accept");exit(EXIT_FAILURE);} else printf("accept
+  // granted!\n");
   if (recvfrom (Fd, msg, sizeof (msg), 0, (struct sockaddr *)&serv, &addrlen)
       == -1)
     {
