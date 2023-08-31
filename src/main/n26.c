@@ -3,7 +3,7 @@
 #include <net/if.h>
 #include <netinet/if_ether.h>
 #include <netinet/ip.h>
-#include <netinet/udp.h> //RAW IP lvl
+#include <netinet/udp.h> //RAW LINK lvl
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,9 +44,7 @@ main ()
   struct sockaddr_ll serv;
   struct ethhdr *ethhdr = (struct ethhdr *)buffer;
   struct iphdr *ipheader = (struct iphdr *)(buffer + sizeof (struct ethhdr));
-  struct udphdr *udpheader
-      = (struct udphdr *)(buffer
-                          + (sizeof (struct iphdr) + sizeof (struct ethhdr)));
+  struct udphdr *udpheader = (struct udphdr *)(buffer + (sizeof (struct iphdr) + sizeof (struct ethhdr)));
 
   raw_socket = socket (AF_PACKET, SOCK_RAW, htons (ETH_P_ALL));
   if (raw_socket == -1)
@@ -142,21 +140,26 @@ main ()
           exit (EXIT_FAILURE);
         }
 
-      struct iphdr *received_iph = (struct iphdr *)buffer;
-      struct udphdr *received_udph
-          = (struct udphdr *)(buffer + sizeof (struct iphdr));
+      struct ethhdr *received_eth = (struct ethhdr *)buffer
+      struct iphdr *received_iph = (struct iphdr *)(buffer + sizeof (struct ethhdr));
+      struct udphdr *received_udph = (struct udphdr *)(buffer + (sizeof (struct iphdr) + sizeof (struct ethhdr)));
 
       if (ntohs (received_udph->dest) == 8888)
         {
-          printf ("src-ip = %s \ndst-ip = %s",
+          printf("\nmessage:%s\n\n",(buffer + sizeof (struct udphdr) + sizeof (struct iphdr) + sizeof (struct ethhdr));
+          
+          printf("src-MAC = %s \ndst-MAC = %s\n",
+                  inet_ntoa (*(struct in_addr *)&received_eth->h_dest),
+                  inet_ntoa (*(struct in_addr *)&received_eth->h_source));
+          
+          printf ("src-ip = %s \ndst-ip = %s\n",
                   inet_ntoa (*(struct in_addr *)&received_iph->saddr),
                   inet_ntoa (*(struct in_addr *)&received_iph->daddr));
 
-          printf ("\nsrc-port = %d \ndst-port = %d \nlenght = %d \ncheck = %d "
-                  "\nmessage:%s\n\n",
+          printf ("src-port = %d \ndst-port = %d \nlenght = %d \ncheck = %d\n "
+                  ,
                   ntohs (received_udph->source), ntohs (received_udph->dest),
-                  ntohs (received_udph->len), ntohs (received_udph->check),
-                  (buffer + sizeof (struct udphdr) + sizeof (struct iphdr)));
+                  ntohs (received_udph->len), ntohs (received_udph->check));
 
           break;
         }
