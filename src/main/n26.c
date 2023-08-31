@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <linux/if_packet.h>
+#include <net/if.h>
 #include <netinet/if_ether.h>
 #include <netinet/ip.h>
 #include <netinet/udp.h> //RAW IP lvl
@@ -14,12 +15,8 @@
 #define SERVER_IP "127.0.0.2"
 #define SPORT 8888
 #define PORT 7777
-
-char SMAC[6] = { 0x08, 0x00, 0x27, 0x93, 0x07, 0xba };
-// char SMAC[6] = {0x52, 0x54, 0x00, 0x12, 0x35, 0x02};
-// char SMAC[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-// char DMAC[6] = {0xFF, 0x02, 0x00, 0x00, 0x00, 0x00};
-int DMAC[6] = { 52, 54, 00, 12, 35, 02 };
+#define SOURCE_MAC "00:11:22:33:44:55"
+#define DEST_MAC "aa:bb:cc:dd:ee:ff"
 
 static int
 IpChecksum (char *ip_hdr_ptr)
@@ -68,20 +65,35 @@ main ()
   memset (&serv, 0, sizeof (serv));
   serv.sll_family = AF_PACKET;
   serv.sll_halen = 6;
-  serv.sll_ifindex = 2;
+  serv.sll_ifindex = if_nametoindex ("lo");
+  // serv.sll_ifindex = 2;
+  /*
   serv.sll_addr[0] = DMAC[0];
   serv.sll_addr[1] = DMAC[1];
   serv.sll_addr[2] = DMAC[2];
   serv.sll_addr[3] = DMAC[3];
   serv.sll_addr[4] = DMAC[4];
   serv.sll_addr[5] = DMAC[5];
+  /*/
+  // if (bind(sockfd, (struct sockaddr *)&dest_addr, sizeof(struct
+  // sockaddr_ll)) == -1) { perror("bind"); return 1;
+  //}
 
   // strcpy(serv.sll_addr, DMAC);
 
   memset (buffer, 0, BUFF_SIZE);
 
-  strncpy (ethhdr->h_source, SMAC, 6);
-  strncpy (ethhdr->h_dest, DMAC, 6);
+  // strncpy(ethhdr->h_source, SMAC, 6);
+  // strncpy(ethhdr->h_dest, DMAC, 6);
+  // ethhdr->h_proto = htons(ETH_P_IP);
+
+  // struct ether_header *eth = (struct ether_header *)datagram;
+  sscanf (SOURCE_MAC, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &ethhdr->h_source[0],
+          &ethhdr->h_source[1], &ethhdr->h_source[2], &ethhdr->h_source[3],
+          &ethhdr->h_source[4], &ethhdr->h_source[5]);
+  sscanf (DEST_MAC, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &ethhdr->h_dest[0],
+          &ethhdr->h_dest[1], &ethhdr->h_dest[2], &ethhdr->h_dest[3],
+          &ethhdr->h_dest[4], &ethhdr->h_dest[5]);
   ethhdr->h_proto = htons (ETH_P_IP);
 
   ipheader->ihl = 5;
