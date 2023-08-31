@@ -55,8 +55,8 @@ main ()
   ipheader->ttl = 254;
   ipheader->protocol = IPPROTO_UDP;
   ipheader->check = 0;
-  ipheader->saddr = inet_addr (SERVER_IP);
-  ipheader->daddr = serv.sin_addr.s_addr;
+  ipheader->daddr = inet_addr (SERVER_IP);
+  ipheader->saddr = serv.sin_addr.s_addr;
 
   udpheader->source = htons (SPORT);
   udpheader->dest = htons (PORT);

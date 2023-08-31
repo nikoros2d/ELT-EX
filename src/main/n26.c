@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 #define BUFF_SIZE 8192
-#define SERVER_IP "127.0.0.2"
+#define SERVER_IP "127.0.0.1"
 #define SPORT 8888
 #define PORT 7777
 #define SOURCE_MAC "00:11:22:33:44:55"
@@ -103,8 +103,8 @@ main ()
   ipheader->frag_off = 0;
   ipheader->ttl = 254;
   ipheader->protocol = IPPROTO_UDP;
-  ipheader->saddr = inet_addr (SERVER_IP);
-  ipheader->daddr = serv.sll_addr;
+  ipheader->daddr = inet_addr (SERVER_IP);
+  ipheader->saddr = serv.sll_addr;
   IpChecksum (ipheader);
 
   udpheader->source = htons (SPORT);
@@ -140,13 +140,13 @@ main ()
           exit (EXIT_FAILURE);
         }
 
-      struct ethhdr *received_eth = (struct ethhdr *)buffer
+      struct ethhdr *received_eth = (struct ethhdr *)buffer;
       struct iphdr *received_iph = (struct iphdr *)(buffer + sizeof (struct ethhdr));
       struct udphdr *received_udph = (struct udphdr *)(buffer + (sizeof (struct iphdr) + sizeof (struct ethhdr)));
 
       if (ntohs (received_udph->dest) == 8888)
         {
-          printf("\nmessage:%s\n\n",(buffer + sizeof (struct udphdr) + sizeof (struct iphdr) + sizeof (struct ethhdr));
+          printf("\nmessage:%s\n\n",(buffer + sizeof (struct udphdr) + sizeof (struct iphdr) + sizeof (struct ethhdr)));
           
           printf("src-MAC = %s \ndst-MAC = %s\n",
                   inet_ntoa (*(struct in_addr *)&received_eth->h_dest),

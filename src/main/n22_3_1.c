@@ -85,7 +85,7 @@ clients (void *argv)
                    64, 0, (struct sockaddr *)(((struct argv *)argv)->serv),
                    ((struct argv *)argv)->len))
     {
-      perror ("recvfrom);
+      perror ("recvfrom");
     }
 
   printf ("Time: %s\n", ((struct argv *)argv)->recv_msg);
